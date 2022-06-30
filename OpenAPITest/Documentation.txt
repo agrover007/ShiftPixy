@@ -1,0 +1,47 @@
+Demo API - to integrate 3rd Party API (Plaid - Sandbox)
+
+Platform/languages : .net 6.0 & c#
+
+API Functions: 
+	Controller: (BankAccountController.cs) calls class object BankAccount.cs
+		GetAccounts()  -- List of all accounts available at that moment (Async calls)
+		GetAccount(string AccountSubType) // AccountSubType = checking, savings, mortgage etc. (Async calls)
+
+	Controller:	OpenAPITest (In-Memory DB details) - Manual CRUD or INSERT from above PLAID apis
+		GET, POST, DELETE (all)
+
+	
+Main Classes Inv
+	BankAccount -- to fetch data from Plaid API and dump into In-Mem EFcontext
+	Token class -- to fetch public and access token of Plaid API based on clientID and secret in app settings file.
+
+
+Helper classes 
+	Masking of PII data before logging using middleware (JsonHelper.cs)
+	Middleware of Swagger/OpenAPI to access with ApiKey only (ApiKeyMiddleware.cs)
+	Added Header parameter with each API on OpenAPI (AddRequiredHeaderParameter)
+	
+DI used for 
+	ILogger - SeriLog 
+	IConfiguration
+	DetailDb -- for dbcontext
+
+Model/Contract Classes 
+	PlaidServiceContract.cs  - to deserialize data from Plaid json to objects
+	Detail.cs/DetailDb.cs - IN memory using EF context
+
+UI - default from OPENAPI 
+
+Default API key to access - 'Test'  --- can be set to any GUID in configuration
+	If I had some more time could create JWT token or HASH comparison. -- tried to implement, if you notice some commented code blocks with region/endregion statements. Due to some architectural changes in .net 6.0 I needed more time. But doable. 
+
+Tried few SOLID patterns like SRP, DIP, ISP . I could explore more if time permitted to analyze Plaid API response to split into different interfaces of BankAccount (Checking/Saving/Mortgage etc).
+
+Data Store - Used EF - In memory context and provided apis too
+
+Masked account-id data by replacing its some characters to * before dumpinng into Serilog.
+
+This is just a logical testing of core pieces and sure it has lot of improvments as it grows.
+
+
+
